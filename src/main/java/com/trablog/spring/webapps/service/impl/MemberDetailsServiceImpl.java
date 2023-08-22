@@ -21,6 +21,6 @@ public class MemberDetailsServiceImpl implements UserDetailsService {
     @Override
     public UserDetails loadUserByUsername(String username) {
         LOGGER.info("[loadUserByUsername] loadUserByUsername 수행. username : {}", username);
-        return memberRepository.getByUsername(username);
+        return memberRepository.getByUserName(username);
     }
 }
