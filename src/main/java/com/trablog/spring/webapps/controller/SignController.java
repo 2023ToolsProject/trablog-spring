@@ -28,8 +28,8 @@ public class SignController {
 
     @PostMapping(value = "/sign-in")
     public SignInResultDto signIn(
-            @Parameter(name = "ID", required = true) @RequestParam String id,
-            @Parameter(name = "Password", required = true) @RequestParam String password)
+            @Parameter(name = "id", required = true) @RequestParam String id,
+            @Parameter(name = "password", required = true) @RequestParam String password)
             throws RuntimeException {
         LOGGER.info("[signIn] 로그인을 시도하고 있습니다. id : {}, pw : ****", id);
         SignInResultDto signInResultDto = signService.signIn(id, password);
@@ -43,10 +43,10 @@ public class SignController {
 
     @PostMapping(value = "/sign-up")
     public SignUpResultDto signUp(
-            @Parameter(name = "ID", required = true) @RequestParam String id,
-            @Parameter(name = "비밀번호", required = true) @RequestParam String password,
-            @Parameter(name = "이름", required = true) @RequestParam String name,
-            @Parameter(name = "권한", required = true) @RequestParam String role) {
+            @Parameter(name = "id", required = true) @RequestParam String id,
+            @Parameter(name = "password", required = true) @RequestParam String password,
+            @Parameter(name = "name", required = true) @RequestParam String name,
+            @Parameter(name = "role", required = true) @RequestParam String role) {
         LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id,
                 name, role);
         SignUpResultDto signUpResultDto = signService.signUp(id, password, name, role);

@@ -31,7 +31,7 @@ public class Member implements UserDetails {
 
     private int loginType; // 로그인 타입
 
-    @Column(nullable = false)
+    //@Column(nullable = false)
     private String nickName; //닉네임
 
     @Column(length = 100)
@@ -48,11 +48,11 @@ public class Member implements UserDetails {
     private String salt; //솔트값
 
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
-    @NotBlank(message = "이메일 주소를 입력하세요.")
+    //@NotBlank(message = "이메일 주소를 입력하세요.")
     private String email;
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
-    @Pattern(regexp = "^(?=.*[A-Za-z])(?=.*\\d)(?=.*[$@$!%*#?&])[A-Za-z\\d$@$!%*#?&]{8,16}$", message = "비밀번호는 8~16자리수여야 합니다. 영문 대소문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.")
+    //@Pattern(regexp = "^(?=.*\\\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}", message = "비밀번호는 8~16자리수여야 합니다. 영문 대소문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.")
     @JsonProperty(access = JsonProperty.Access.WRITE_ONLY)
     private String password; //비밀번호
     private LocalDateTime pwUpdateDate; //비밀번호 수정일
