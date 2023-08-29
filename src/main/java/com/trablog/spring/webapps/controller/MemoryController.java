@@ -1,8 +1,8 @@
 package com.trablog.spring.webapps.controller;
 
-import com.trablog.spring.webapps.data.dto.CreateBoardDto;
+import com.trablog.spring.webapps.data.dto.CreateMemoryDto;
 import com.trablog.spring.webapps.data.entity.Memory;
-import com.trablog.spring.webapps.service.BoardService;
+import com.trablog.spring.webapps.service.MemoryService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -17,42 +17,42 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/boards")
-public class BoardController {
+@RequestMapping("/api/memories")
+public class MemoryController {
 
-    private final BoardService boardService;
+    private final MemoryService memoryService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getBoards(@PageableDefault Pageable pageable, PagedResourcesAssembler<Memory> assembler) {
-        Page<Memory> boards = boardService.findAll(pageable);
-        PagedModel<EntityModel<Memory>> model = assembler.toModel(boards);
+    public ResponseEntity<?> getMemories(@PageableDefault Pageable pageable, PagedResourcesAssembler<Memory> assembler) {
+        Page<Memory> memories = memoryService.findAll(pageable);
+        PagedModel<EntityModel<Memory>> model = assembler.toModel(memories);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<?> getBoardById(@PathVariable("id") Long id) {
-        Memory memory = boardService.findBoardById(id);
+    public ResponseEntity<?> getMemoryById(@PathVariable("id") Long id) {
+        Memory memory = memoryService.findMemoryById(id);
         return new ResponseEntity<>(memory, HttpStatus.OK);
     }
 
 
     @PostMapping
-    public ResponseEntity<?> postBoard(@RequestBody CreateBoardDto board) {
-        Memory savedMemory = boardService.save(board.create());
+    public ResponseEntity<?> postMemory(@RequestBody CreateMemoryDto memory) {
+        Memory savedMemory = memoryService.save(memory.create());
         return new ResponseEntity<>(savedMemory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<?> putBoard(@PathVariable("id") Long id, @RequestBody CreateBoardDto board) {
-        Memory persistMemory = boardService.findBoardById(id);
-        persistMemory.update(board.create());
-        Memory savedMemory = boardService.save(persistMemory);
+    public ResponseEntity<?> putMemory(@PathVariable("id") Long id, @RequestBody CreateMemoryDto memory) {
+        Memory persistMemory = memoryService.findMemoryById(id);
+        persistMemory.update(memory.create());
+        Memory savedMemory = memoryService.save(persistMemory);
         return new ResponseEntity<>(savedMemory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<?> deleteBoard(@PathVariable("id") Long id) {
-        boardService.deleteById(id);
+    public ResponseEntity<?> deleteMemory(@PathVariable("id") Long id) {
+        memoryService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

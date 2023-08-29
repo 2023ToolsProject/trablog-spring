@@ -36,7 +36,7 @@ public class SecurityConfiguration {
                                 "/sign-api/exception").permitAll()
                                 // .requestMatchers((HttpMethod.GET, "/product/**").permitAll() -> 비회원 허용 기능 없어서 생략함
                                 .requestMatchers("**exception**").permitAll()
-                                .requestMatchers("/api/boards/**").hasRole("USER")
+                                .requestMatchers("/api/memories/**").hasRole("USER")
                 )
                 .exceptionHandling(authenticationManager -> authenticationManager
                                         .accessDeniedHandler(new CustomAccessDeniedHandler())

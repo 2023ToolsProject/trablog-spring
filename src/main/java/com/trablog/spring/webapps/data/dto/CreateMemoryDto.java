@@ -7,7 +7,7 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class CreateBoardDto {
+public class CreateMemoryDto {
     private String title;
     private String subTitle;
     private String content;
@@ -16,7 +16,7 @@ public class CreateBoardDto {
     public Memory create(){
         Memory savedMemory = Memory.builder()
                 .title(this.getTitle())
-                .boardType(this.getMemoryType())
+                .memoryType(this.getMemoryType())
                 .content(this.getContent())
                 .subTitle(this.getSubTitle())
                 .build();
