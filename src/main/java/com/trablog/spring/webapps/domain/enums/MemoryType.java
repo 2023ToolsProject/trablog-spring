@@ -3,7 +3,7 @@ package com.trablog.spring.webapps.domain.enums;
 import lombok.NoArgsConstructor;
 
 @NoArgsConstructor
-public enum BoardType {
+public enum MemoryType {
     FREE,
     HOT
 }

@@ -1,5 +1,6 @@
 package com.trablog.spring.webapps.config.security;
 
+import com.trablog.spring.webapps.exception.UnauthorizedException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -25,7 +26,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
     protected void doFilterInternal(HttpServletRequest servletRequest,
                                     HttpServletResponse servletResponse,
                                     FilterChain filterChain) throws ServletException, IOException {
+
         String token = jwtTokenProvider.resolveToken(servletRequest);
+        if(token == null){
+            throw new UnauthorizedException("");
+        }
         token = token.split(" ")[1];
         LOGGER.info("[doFilterInternal] token 값 추출 완료. token : {}", token);
 
@@ -36,5 +41,17 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
         }
         filterChain.doFilter(servletRequest, servletResponse);
+    }
+
+    @Override
+    protected boolean shouldNotFilter(HttpServletRequest request)
+            throws ServletException {
+        String path = request.getRequestURI();
+        System.out.println(path);
+        if("/sign-api/sign-in".equals(path))
+            return true;
+        if("/sign-api/sign-up".equals(path))
+            return true;
+        return false;
     }
 }

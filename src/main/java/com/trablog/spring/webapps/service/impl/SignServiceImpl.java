@@ -33,19 +33,19 @@ public class SignServiceImpl implements SignService {
     }
 
     @Override
-    public SignUpResultDto signUp(String id, String password, String name, String role) {
+    public SignUpResultDto signUp(String username, String password, String name, String role) {
         LOGGER.info("[getSignUpResult] 회원 가입 정보 전달");
         Member member;
         if (role.equalsIgnoreCase("admin")) {
             member = Member.builder()
-                    .userName(id)
+                    .userName(username)
                     .nickName(name)
                     .password(passwordEncoder.encode(password))
                     .roles(Collections.singletonList("ROLE_ADMIN"))
                     .build();
         } else {
             member = Member.builder()
-                    .userName(id)
+                    .userName(username)
                     .nickName(name)
                     .password(passwordEncoder.encode(password))
                     .roles(Collections.singletonList("ROLE_USER"))
@@ -53,7 +53,10 @@ public class SignServiceImpl implements SignService {
         }
 
         Member savedMember = memberRepository.save(member);
-        SignUpResultDto signUpResultDto = new SignInResultDto();
+        SignUpResultDto signUpResultDto = SignUpResultDto.builder()
+                        .token(jwtTokenProvider.createToken(String.valueOf(member.getUserName()),
+                                member.getRoles()))
+                        .build();
 
         LOGGER.info("[getSignUpResult] userEntity 값이 들어왔는지 확인 후 결과값 주입");
         if (!savedMember.getUserName().isEmpty()) {
@@ -92,6 +95,11 @@ public class SignServiceImpl implements SignService {
 
     // 결과 모델에 api 요청 성공 데이터를 세팅해주는 메소드
     private void setSuccessResult(SignUpResultDto result) {
+        result.setSuccess(true);
+        result.setCode(CommonResponse.SUCCESS.getCode());
+        result.setMsg(CommonResponse.SUCCESS.getMsg());
+    }
+    private void setSuccessResult(SignInResultDto result) {
         result.setSuccess(true);
         result.setCode(CommonResponse.SUCCESS.getCode());
         result.setMsg(CommonResponse.SUCCESS.getMsg());

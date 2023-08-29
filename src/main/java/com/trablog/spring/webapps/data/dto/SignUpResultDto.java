@@ -1,14 +1,12 @@
 package com.trablog.spring.webapps.data.dto;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.ToString;
+import lombok.*;
 
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString
+@Builder
 public class SignUpResultDto {
 
     private boolean success;
@@ -17,4 +15,5 @@ public class SignUpResultDto {
 
     private String msg;
 
+    private String token;
 }

@@ -44,12 +44,16 @@ public class Member implements UserDetails {
 
     private LocalDateTime updateDate; //개인정보 수정날짜
 
+    /*
     @Column(length = 128)
     private String salt; //솔트값
+    */
 
+    /*
     @Email(message = "올바른 이메일 주소를 입력해주세요.")
     //@NotBlank(message = "이메일 주소를 입력하세요.")
     private String email;
+     */
 
     @NotBlank(message = "비밀번호를 입력해주세요.")
     //@Pattern(regexp = "^(?=.*\\\\d)(?=.*[a-zA-Z])[0-9a-zA-Z]{8,16}", message = "비밀번호는 8~16자리수여야 합니다. 영문 대소문자, 숫자, 특수문자를 1개 이상 포함해야 합니다.")

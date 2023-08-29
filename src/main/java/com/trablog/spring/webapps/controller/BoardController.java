@@ -1,7 +1,7 @@
 package com.trablog.spring.webapps.controller;
 
 import com.trablog.spring.webapps.data.dto.CreateBoardDto;
-import com.trablog.spring.webapps.data.entity.Board;
+import com.trablog.spring.webapps.data.entity.Memory;
 import com.trablog.spring.webapps.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -23,24 +23,31 @@ public class BoardController {
     private final BoardService boardService;
 
     @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getBoards(@PageableDefault Pageable pageable, PagedResourcesAssembler<Board> assembler) {
-        Page<Board> boards = boardService.findAll(pageable);
-        PagedModel<EntityModel<Board>> model = assembler.toModel(boards);
+    public ResponseEntity<?> getBoards(@PageableDefault Pageable pageable, PagedResourcesAssembler<Memory> assembler) {
+        Page<Memory> boards = boardService.findAll(pageable);
+        PagedModel<EntityModel<Memory>> model = assembler.toModel(boards);
         return new ResponseEntity<>(model, HttpStatus.OK);
     }
 
+    @GetMapping("/{id}")
+    public ResponseEntity<?> getBoardById(@PathVariable("id") Long id) {
+        Memory memory = boardService.findBoardById(id);
+        return new ResponseEntity<>(memory, HttpStatus.OK);
+    }
+
+
     @PostMapping
     public ResponseEntity<?> postBoard(@RequestBody CreateBoardDto board) {
-        Board savedBoard = boardService.save(board.create());
-        return new ResponseEntity<>(savedBoard, HttpStatus.CREATED);
+        Memory savedMemory = boardService.save(board.create());
+        return new ResponseEntity<>(savedMemory, HttpStatus.CREATED);
     }
 
     @PutMapping("/{id}")
     public ResponseEntity<?> putBoard(@PathVariable("id") Long id, @RequestBody CreateBoardDto board) {
-        Board persistBoard = boardService.findBoardById(id);
-        persistBoard.update(board.create());
-        Board savedBoard = boardService.save(persistBoard);
-        return new ResponseEntity<>(savedBoard, HttpStatus.OK);
+        Memory persistMemory = boardService.findBoardById(id);
+        persistMemory.update(board.create());
+        Memory savedMemory = boardService.save(persistMemory);
+        return new ResponseEntity<>(savedMemory, HttpStatus.OK);
     }
 
     @DeleteMapping("/{id}")

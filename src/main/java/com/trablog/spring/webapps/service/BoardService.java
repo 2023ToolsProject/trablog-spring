@@ -1,8 +1,7 @@
 package com.trablog.spring.webapps.service;
 
 
-import com.trablog.spring.webapps.data.dto.CreateBoardDto;
-import com.trablog.spring.webapps.data.entity.Board;
+import com.trablog.spring.webapps.data.entity.Memory;
 import com.trablog.spring.webapps.data.repository.BoardRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -15,16 +14,16 @@ public class BoardService {
     private final BoardRepository boardRepository;
     private final MemberService memberService;
 
-    public Page<Board> findAll(Pageable pageable) {
+    public Page<Memory> findAll(Pageable pageable) {
         return boardRepository.findAll(pageable);
     }
-    public Board findBoardById(Long id) {
-        Board board = boardRepository.findById(id).orElse(new Board());
-        return board;
+    public Memory findBoardById(Long id) {
+        Memory memory = boardRepository.findById(id).orElse(new Memory());
+        return memory;
     }
-    public Board save(Board board) {
+    public Memory save(Memory memory) {
 
-        return boardRepository.save(board);
+        return boardRepository.save(memory);
     }
 
     public void deleteById(Long id) {

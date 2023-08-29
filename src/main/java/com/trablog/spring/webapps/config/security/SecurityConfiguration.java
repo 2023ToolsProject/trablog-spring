@@ -5,6 +5,7 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer;
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer;
@@ -15,6 +16,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 
 
 @Configuration
+@EnableMethodSecurity(securedEnabled = true, prePostEnabled = true)
 public class SecurityConfiguration {
 
     private final JwtTokenProvider jwtTokenProvider;
@@ -34,7 +36,7 @@ public class SecurityConfiguration {
                                 "/sign-api/exception").permitAll()
                                 // .requestMatchers((HttpMethod.GET, "/product/**").permitAll() -> 비회원 허용 기능 없어서 생략함
                                 .requestMatchers("**exception**").permitAll()
-                                .anyRequest().hasRole("ADMIN")
+                                .requestMatchers("/api/boards/**").hasRole("USER")
                 )
                 .exceptionHandling(authenticationManager -> authenticationManager
                                         .accessDeniedHandler(new CustomAccessDeniedHandler())

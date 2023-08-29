@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -43,15 +44,15 @@ public class SignController {
 
     @PostMapping(value = "/sign-up")
     public SignUpResultDto signUp(
-            @Parameter(name = "id", required = true) @RequestParam String id,
+            @Parameter(name = "username", required = true) @RequestParam String username,
             @Parameter(name = "password", required = true) @RequestParam String password,
             @Parameter(name = "name", required = true) @RequestParam String name,
             @Parameter(name = "role", required = true) @RequestParam String role) {
-        LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", id,
+        LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", username,
                 name, role);
-        SignUpResultDto signUpResultDto = signService.signUp(id, password, name, role);
+        SignUpResultDto signUpResultDto = signService.signUp(username, password, name, role);
 
-        LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", id);
+        LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", username);
         return signUpResultDto;
     }
 
