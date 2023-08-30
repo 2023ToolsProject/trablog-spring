@@ -24,14 +24,14 @@ public class Memory extends BaseTimeEntity implements Serializable {
     @Column
     private String title;
 
-    @Column
-    private String subTitle; // Todo: 삭제
+//    @Column
+//    private String subTitle; // Todo: 삭제
 
     @Column
     private String content;
 
-    @Column
-    private MemoryType memoryType; // Todo: 삭제
+//    @Column
+//    private MemoryType memoryType; // Todo: 삭제
 
     @ManyToOne
     private Member member;
@@ -54,23 +54,33 @@ public class Memory extends BaseTimeEntity implements Serializable {
     @Column
     private String buildingName;
 
-
-
     @Builder
-    public Memory(Long id, String title, String subTitle, String content, MemoryType memoryType, Member member) {
-        this.id = id;
+    public Memory(String title, String content, Member member, List<MemoryImage> memoryImage, double latitude, double longitude, String address, String roadAddress, String buildingName) {
         this.title = title;
-        this.subTitle = subTitle;
         this.content = content;
-        this.memoryType = memoryType;
         this.member = member;
+        this.memoryImage = memoryImage;
+        this.latitude = latitude;
+        this.longitude = longitude;
+        this.address = address;
+        this.roadAddress = roadAddress;
+        this.buildingName = buildingName;
     }
+
+
+
+
 
     public void update(Memory memory) {
         this.title = memory.getTitle();
-        this.subTitle = memory.getSubTitle();
         this.content = memory.getContent();
-        this.memoryType = memory.getMemoryType();
+        this.member = memory.getMember();
+        this.memoryImage = memory.getMemoryImage();
+        this.latitude = memory.getLatitude();
+        this.longitude = memory.getLongitude();
+        this.address = memory.getAddress();
+        this.roadAddress = memory.getRoadAddress();
+        this.buildingName = memory.getBuildingName();
     }
 
 }
