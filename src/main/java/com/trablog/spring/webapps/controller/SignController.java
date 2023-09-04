@@ -46,11 +46,11 @@ public class SignController {
     public SignUpResultDto signUp(
             @Parameter(name = "username", required = true) @RequestParam String username,
             @Parameter(name = "password", required = true) @RequestParam String password,
-            @Parameter(name = "name", required = true) @RequestParam String name,
+            @Parameter(name = "nickname", required = true) @RequestParam String nickname,
             @Parameter(name = "role", required = true) @RequestParam String role) {
         LOGGER.info("[signUp] 회원가입을 수행합니다. id : {}, password : ****, name : {}, role : {}", username,
-                name, role);
-        SignUpResultDto signUpResultDto = signService.signUp(username, password, name, role);
+                nickname, role);
+        SignUpResultDto signUpResultDto = signService.signUp(username, password, nickname, role);
 
         LOGGER.info("[signUp] 회원가입을 완료했습니다. id : {}", username);
         return signUpResultDto;

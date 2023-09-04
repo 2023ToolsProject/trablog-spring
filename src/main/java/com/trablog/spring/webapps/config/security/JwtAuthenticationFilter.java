@@ -9,15 +9,18 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.stereotype.Service;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import java.io.IOException;
 
+@Service
 public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final Logger LOGGER = LoggerFactory.getLogger(JwtAuthenticationFilter.class);
     private final JwtTokenProvider jwtTokenProvider;
 
+    private String userName;
     public JwtAuthenticationFilter(JwtTokenProvider jwtTokenProvider) {
         this.jwtTokenProvider = jwtTokenProvider;
     }
@@ -40,6 +43,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
             SecurityContextHolder.getContext().setAuthentication(authentication);
             LOGGER.info("[doFilterInternal] token 값 유효성 체크 완료");
         }
+        //User 가져오기
+        userName = jwtTokenProvider.getUsername(token);
+        LOGGER.info("사용자: {}", userName);
         filterChain.doFilter(servletRequest, servletResponse);
     }
 
@@ -53,5 +59,9 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if("/sign-api/sign-up".equals(path))
             return true;
         return false;
+    }
+
+    public String getUserName() {
+        return this.userName;
     }
 }
