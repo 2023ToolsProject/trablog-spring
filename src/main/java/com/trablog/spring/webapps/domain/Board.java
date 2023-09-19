@@ -1,5 +1,4 @@
 package com.trablog.spring.webapps.domain;
 
-public enum RoleType {
-    USER, ADMIN;
+public class Board {
 }
