@@ -12,4 +12,11 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     @EntityGraph(attributePaths = "roleSet")
     @Query("select m from Member m where m.username = :username")
     Optional<Member> getWithRoles(String username);
+
+    @Query("select m from Member m where m.username = :username")
+    Optional<Member> existsByUsername(String username);
+
+
+
+
 }

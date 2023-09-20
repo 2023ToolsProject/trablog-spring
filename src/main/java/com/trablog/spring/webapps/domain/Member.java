@@ -14,23 +14,25 @@ import java.util.Set;
 @ToString(exclude = "roleSet")
 public class Member extends BaseEntity {
 
-    @Column(nullable = false, length = 10, unique = true)
-    private String username; // 로그인 아이디
+    @Column(nullable = false, length = 100)
+    private String email;
+
+    // 1부터 시작하여 자동으로 1씩 증가하도록 증가 전략 설정
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Integer id; // 회원 일련번호
 
     @Column(length = 100)
     private String password; // 비밀번호(해쉬를 이용한 암호화를 할 것이므로 사이즈를 넉넉히)
-
-    @Column(nullable = false, length = 100)
-    private String email;
 
     @ElementCollection(fetch = FetchType.LAZY)
     @Builder.Default
     private Set<MemberRole> roleSet = new HashSet<>();
 
-    @Id
-    // 1부터 시작하여 자동으로 1씩 증가하도록 증가 전략 설정
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Integer id; // 회원 일련번호
+    @Column(nullable = false, length = 10, unique = true)
+    private String username; // 로그인 아이디
+
+
 
     public void changePassword(String password){
         this.password = password;
