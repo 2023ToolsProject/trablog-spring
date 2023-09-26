@@ -9,5 +9,5 @@ public interface MemberService {
 
     }
 
-    MemberResponseDTO join(MemberJoinDTO memberJoinDTO) throws UsernameExistException;
+    String join(MemberJoinDTO memberJoinDTO) throws UsernameExistException;
 }

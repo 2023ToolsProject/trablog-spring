@@ -2,9 +2,12 @@ package com.trablog.spring.webapps.domain;
 
 import jakarta.persistence.*;
 import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
-import java.util.HashSet;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 @Entity
 @Getter
@@ -12,7 +15,7 @@ import java.util.Set;
 @NoArgsConstructor
 @AllArgsConstructor
 @ToString(exclude = "roleSet")
-public class Member extends BaseEntity {
+public class Member extends BaseEntity implements UserDetails {
 
     @Column(nullable = false, length = 100)
     private String email;
@@ -25,9 +28,13 @@ public class Member extends BaseEntity {
     @Column(length = 100)
     private String password; // 비밀번호(해쉬를 이용한 암호화를 할 것이므로 사이즈를 넉넉히)
 
-    @ElementCollection(fetch = FetchType.LAZY)
+//    @ElementCollection(fetch = FetchType.LAZY)
+//    @Builder.Default
+//    private Set<MemberRole> roleSet = new HashSet<>();
+
+    @ElementCollection(fetch = FetchType.EAGER)
     @Builder.Default
-    private Set<MemberRole> roleSet = new HashSet<>();
+    private List<String> roles = new ArrayList<>();
 
     @Column(nullable = false, length = 10, unique = true)
     private String username; // 로그인 아이디
@@ -38,11 +45,38 @@ public class Member extends BaseEntity {
         this.password = password;
     }
 
-    public void addRole(MemberRole memberRole){
-        this.roleSet.add(memberRole);
+    public void addRole(String memberRole){
+        this.roles.add(memberRole);
     }
 
     public void clearRoles() {
-        this.roleSet.clear();
+        this.roles.clear();
+    }
+
+    @Override
+    public Collection<? extends GrantedAuthority> getAuthorities() {
+        return this.roles.stream()
+                .map(SimpleGrantedAuthority::new)
+                .collect(Collectors.toList());
+    }
+
+    @Override
+    public boolean isAccountNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isAccountNonLocked() {
+        return true;
+    }
+
+    @Override
+    public boolean isCredentialsNonExpired() {
+        return true;
+    }
+
+    @Override
+    public boolean isEnabled() {
+        return true;
     }
 }

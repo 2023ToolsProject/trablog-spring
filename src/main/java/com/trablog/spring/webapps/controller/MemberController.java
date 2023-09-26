@@ -20,16 +20,17 @@ public class MemberController {
     private final MemberService memberService;
 
     @PostMapping("/join")
-    public ResponseEntity<MemberResponseDTO> joinPOST(@RequestBody MemberJoinDTO memberJoinDTO) {
+    public ResponseEntity<String> joinPOST(@RequestBody MemberJoinDTO memberJoinDTO) {
         log.info("join post...");
         log.info(memberJoinDTO);
-        MemberResponseDTO memberResponseDTO;
+//        MemberResponseDTO memberResponseDTO;
+        String jwtToken;
         try {
-           memberResponseDTO  = memberService.join(memberJoinDTO);
+           jwtToken  = memberService.join(memberJoinDTO);
         } catch (MemberService.UsernameExistException e) {
             return new ResponseEntity<>(HttpStatus.CONFLICT);
         }
-        return ResponseEntity.status(HttpStatus.OK).body(memberResponseDTO);
+        return ResponseEntity.status(HttpStatus.OK).body(jwtToken);
     }
 
 

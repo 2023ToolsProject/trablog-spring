@@ -8,5 +8,7 @@ import lombok.*;
 @NoArgsConstructor
 @Builder
 public class MemberResponseDTO {
-    private String username;
+//    private String username;
+    private int httpStatus;
+//    private String accessToken;
 }
