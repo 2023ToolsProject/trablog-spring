@@ -1,7 +1,10 @@
 package com.trablog.spring.webapps.service;
 
+import com.trablog.spring.webapps.domain.Member;
 import com.trablog.spring.webapps.dto.MemberResponseDTO;
+import com.trablog.spring.webapps.security.Token;
 import com.trablog.spring.webapps.security.dto.MemberJoinDTO;
+import com.trablog.spring.webapps.security.dto.MemberLoginDTO;
 
 public interface MemberService {
 
@@ -9,5 +12,18 @@ public interface MemberService {
 
     }
 
-    String join(MemberJoinDTO memberJoinDTO) throws UsernameExistException;
+    static class UsernameNotFoundException extends Exception{
+
+    }
+
+    static class WrongPasswordException extends Exception{
+
+    }
+
+    Token join(MemberJoinDTO memberJoinDTO) throws UsernameExistException;
+
+    Token login(MemberLoginDTO memberLoginDTO) throws UsernameNotFoundException, WrongPasswordException;
+
+    Member updateToken(String username, Token token) throws UsernameNotFoundException;
+
 }
