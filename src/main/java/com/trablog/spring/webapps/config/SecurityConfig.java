@@ -2,6 +2,7 @@ package com.trablog.spring.webapps.config;
 import com.trablog.spring.webapps.security.CustomUserDetailService;
 import com.trablog.spring.webapps.security.JwtAuthenticationFilter;
 import com.trablog.spring.webapps.security.JwtTokenProvider;
+import com.trablog.spring.webapps.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.modelmapper.ModelMapper;

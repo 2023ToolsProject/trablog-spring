@@ -19,7 +19,6 @@ import java.util.List;
 @RequiredArgsConstructor
 public class JwtAuthenticationFilter extends OncePerRequestFilter { //GenericFilterBean
     private final JwtTokenProvider jwtTokenProvider;
-    private final MemberService memberService;
 
 //    @Override
 //    public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain) throws IOException, ServletException {
@@ -62,11 +61,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter { //GenericFil
                     jwtTokenProvider.setHeaderAccessToken(response, newToken.getAccessToken());
                     jwtTokenProvider.setHeaderRefreshToken(response, newToken.getRefreshToken());
                     // db 갱신
-                    try {
-                        memberService.updateToken(username, newToken);
-                    } catch (MemberService.UsernameNotFoundException e) {
-                        throw new RuntimeException(e);
-                    }
+
                     /// 토큰으로부터 유저 정보를 받아옵니다.
                     Authentication authentication = jwtTokenProvider.getAuthentication(newToken.getAccessToken());
                     /// SecurityContext에 Authentication 객체 저장
