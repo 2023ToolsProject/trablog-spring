@@ -14,6 +14,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Date;
 import java.util.Optional;
 
 @Log4j2
@@ -60,13 +61,12 @@ public class MemberServiceImpl implements MemberService {
             String refreshToken = jwtToken.getRefreshToken();
             log.info(refreshToken);
 
-            member.setAccessToken(accessToken);
             member.setRefreshToken(refreshToken);
+            member.setTokenIssueDate(new Date());
 
             log.info("=======================");
             log.info(member);
             log.info(member.getRoles()); // 여기까지는 잘됨
-            log.info(member.getAccessToken());
 
             Member savedMember = memberRepository.save(member);
             log.info(savedMember);
@@ -106,6 +106,7 @@ public class MemberServiceImpl implements MemberService {
             //update 하기
             updateToken(username, jwtToken);
 
+
             return jwtToken;
         }
 
@@ -115,9 +116,8 @@ public class MemberServiceImpl implements MemberService {
             Member updatedMember;
             if(selectedMember.isPresent()) {
                 Member member = selectedMember.get();
-                member.setAccessToken(token.getAccessToken());
                 member.setRefreshToken(token.getRefreshToken());
-
+                member.setTokenIssueDate(new Date());
                 updatedMember = memberRepository.save(member);
             } else {
                 throw new UsernameNotFoundException();

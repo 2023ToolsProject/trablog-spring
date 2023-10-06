@@ -11,6 +11,7 @@ import java.util.stream.Collectors;
 
 @Entity
 @Getter
+@Setter
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
@@ -39,9 +40,11 @@ public class Member extends BaseEntity implements UserDetails {
     @Column(nullable = false, length = 10, unique = true)
     private String username; // 로그인 아이디
 
-    private String accessToken;
-
     private String refreshToken;
+
+    private long tokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 2주
+
+    private Date tokenIssueDate;
 
     public void changePassword(String password){
         this.password = password;
@@ -50,8 +53,6 @@ public class Member extends BaseEntity implements UserDetails {
     public void addRole(String memberRole){
         this.roles.add(memberRole);
     }
-
-    public void setAccessToken(String accessToken) {this.accessToken = accessToken;}
 
     public void setRefreshToken(String refreshToken) {this.refreshToken = refreshToken;}
 

@@ -8,6 +8,7 @@ import com.trablog.spring.webapps.security.dto.MemberLoginDTO;
 import com.trablog.spring.webapps.security.dto.RefreshTokenDTO;
 import com.trablog.spring.webapps.service.MemberService;
 import com.trablog.spring.webapps.service.MemberServiceImpl;
+import com.trablog.spring.webapps.service.RefreshTokenService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
 import org.springframework.http.HttpStatus;
@@ -25,6 +26,7 @@ import org.springframework.web.bind.annotation.*;
 public class MemberController {
 
     private final MemberService memberService;
+    private final RefreshTokenService refreshTokenService;
 
     @GetMapping("/profile")
     public ResponseEntity<Member> getMember() {
@@ -64,16 +66,25 @@ public class MemberController {
     }
 
 
-//    @PostMapping("/refresh")
-//    public ResponseEntity<Token> refreshPOST(@RequestBody RefreshTokenDTO refreshTokenDTO) {
-//        log.info("refresh post...");
-//        log.info(refreshTokenDTO);
-//        try {
-//            // 리프레시 토큰의 유효성 검사
-//        } catch () { // 리프레시 토큰 기간 만료
-//            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
-//        return ResponseEntity.status(HttpStatus.OK).body(token); // 액세스 토큰과 리프레시 토큰 재발급
-//    }
+    @PostMapping("/refresh") // 리프레시 토큰 일치 검사는 액세스 토큰이 만료되었을 때 하는 것임.
+    public ResponseEntity<Token> refreshPOST(@RequestBody RefreshTokenDTO refreshTokenDTO) throws MemberService.UsernameNotFoundException {
+        log.info("refresh post...");
+        log.info(refreshTokenDTO);
+        String username = refreshTokenDTO.getUsername();
+        String refreshToken = refreshTokenDTO.getRefreshToken();
+        if(refreshTokenService.CheckToken(username, refreshToken)) {
+            if(!refreshTokenService.CheckTokenValidTime(username)){
+                return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //리프레시 토큰 만료된 경우
+            }
+            // 토큰 일치 & 유효해도 액세스 토큰 만료되었으므로 액세스 토큰 & 리프레시 토큰 갱신
+            Token token = refreshTokenService.TokenReisue(username);
+            return ResponseEntity.status(HttpStatus.OK).body(token); // 액세스 토큰과 리프레시 토큰 재발급
+        } else {
+            // 리프레시 토큰 불일치
+            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+        }
+
+    }
 
 
 
