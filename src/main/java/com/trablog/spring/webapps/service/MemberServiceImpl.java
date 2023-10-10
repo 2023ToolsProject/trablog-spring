@@ -54,6 +54,7 @@ public class MemberServiceImpl implements MemberService {
             member.changePassword(passwordEncoder.encode(memberJoinDTO.getPassword()));
             member.addRole("ROLE_USER");
 
+
             Token jwtToken = jwtTokenProvider.createToken(member.getUsername(), member.getRoles());
 
             String accessToken = jwtToken.getAccessToken();
@@ -63,6 +64,7 @@ public class MemberServiceImpl implements MemberService {
 
             member.setRefreshToken(refreshToken);
             member.setTokenIssueDate(new Date());
+            member.setTokenValidTime(14 * 24 * 60 * 60 * 1000L);
 
             log.info("=======================");
             log.info(member);

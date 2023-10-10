@@ -42,7 +42,7 @@ public class Member extends BaseEntity implements UserDetails {
 
     private String refreshToken;
 
-    private long tokenValidTime = 14 * 24 * 60 * 60 * 1000L; // 2주
+    private long tokenValidTime;// 14 * 24 * 60 * 60 * 1000L; 2주
 
     private Date tokenIssueDate;
 

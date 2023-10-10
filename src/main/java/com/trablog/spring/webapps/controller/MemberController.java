@@ -77,7 +77,7 @@ public class MemberController {
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //리프레시 토큰 만료된 경우
             }
             // 토큰 일치 & 유효해도 액세스 토큰 만료되었으므로 액세스 토큰 & 리프레시 토큰 갱신
-            Token token = refreshTokenService.TokenReisue(username);
+            Token token = refreshTokenService.TokenReissue(username);
             return ResponseEntity.status(HttpStatus.OK).body(token); // 액세스 토큰과 리프레시 토큰 재발급
         } else {
             // 리프레시 토큰 불일치

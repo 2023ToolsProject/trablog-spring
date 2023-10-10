@@ -30,7 +30,7 @@ public class RefreshTokenService {
         else { return false;}
     }
 
-    public Token TokenReisue(String username) throws MemberService.UsernameNotFoundException {
+    public Token TokenReissue(String username) throws MemberService.UsernameNotFoundException {
         Optional<Member> member = memberRepository.getWithRoles(username);
         Token token = jwtTokenProvider.createToken(username, member.get().getRoles());
         memberService.updateToken(username, token);
