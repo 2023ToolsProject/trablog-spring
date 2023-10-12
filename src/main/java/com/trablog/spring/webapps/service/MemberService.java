@@ -1,17 +1,29 @@
 package com.trablog.spring.webapps.service;
 
-import com.trablog.spring.webapps.data.dto.MemberDto;
-import com.trablog.spring.webapps.data.dto.MemberResponseDto;
-import org.modelmapper.ModelMapper;
-
-import java.util.List;
+import com.trablog.spring.webapps.domain.Member;
+import com.trablog.spring.webapps.dto.MemberResponseDTO;
+import com.trablog.spring.webapps.security.Token;
+import com.trablog.spring.webapps.security.dto.MemberJoinDTO;
+import com.trablog.spring.webapps.security.dto.MemberLoginDTO;
 
 public interface MemberService {
 
-    List<MemberResponseDto> getMember();
-    MemberResponseDto getMemberById(Long userNo);
-    MemberResponseDto saveMember(MemberDto memberDto);
-    MemberResponseDto createMember(String username, String email, String password);
-    MemberResponseDto changeMemberName(Long userNo, String userName) throws Exception;
-    void deleteMember(Long userNo) throws Exception;
+    static class UsernameExistException extends Exception {
+
+    }
+
+    static class UsernameNotFoundException extends Exception{
+
+    }
+
+    static class WrongPasswordException extends Exception{
+
+    }
+
+    Token join(MemberJoinDTO memberJoinDTO) throws UsernameExistException;
+
+    Token login(MemberLoginDTO memberLoginDTO) throws UsernameNotFoundException, WrongPasswordException;
+
+    Member updateToken(String username, Token token) throws UsernameNotFoundException;
+
 }
