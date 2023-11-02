@@ -1,6 +1,6 @@
 package com.trablog.spring.webapps.domain;
 
-import jakarta.persistence.*;
+import javax.persistence.*;
 import lombok.*;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
@@ -15,8 +15,8 @@ import java.util.stream.Collectors;
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@ToString(exclude = "roleSet")
-public class Member extends BaseEntity implements UserDetails {
+//@ToString(exclude = "roleSet")
+public class Member extends BaseTimeEntity implements UserDetails {
 
     @Column(nullable = false, length = 100)
     private String email;
