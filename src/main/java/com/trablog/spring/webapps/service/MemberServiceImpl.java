@@ -1,8 +1,6 @@
 package com.trablog.spring.webapps.service;
 
 import com.trablog.spring.webapps.domain.Member;
-import com.trablog.spring.webapps.domain.MemberRole;
-import com.trablog.spring.webapps.dto.MemberResponseDTO;
 import com.trablog.spring.webapps.repository.MemberRepository;
 import com.trablog.spring.webapps.security.JwtTokenProvider;
 import com.trablog.spring.webapps.security.Token;
@@ -72,13 +70,6 @@ public class MemberServiceImpl implements MemberService {
 
             Member savedMember = memberRepository.save(member);
             log.info(savedMember);
-//
-//            String jwtToken = jwtTokenProvider.createToken(savedMember.getUsername(), savedMember.getRoles());
-//
-//            log.info(jwtToken);
-
-//            MemberResponseDTO memberResponseDTO = new MemberResponseDTO();
-//            memberResponseDTO.setHttpStatus(201);
 
             return jwtToken;
         }

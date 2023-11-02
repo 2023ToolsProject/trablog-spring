@@ -1,7 +1,6 @@
 package com.trablog.spring.webapps.service;
 
 import com.trablog.spring.webapps.domain.Member;
-import com.trablog.spring.webapps.dto.MemberResponseDTO;
 import com.trablog.spring.webapps.security.Token;
 import com.trablog.spring.webapps.security.dto.MemberJoinDTO;
 import com.trablog.spring.webapps.security.dto.MemberLoginDTO;

@@ -60,11 +60,11 @@ public class SecurityConfig {
                 .csrf(CsrfConfigurer::disable)
                 .sessionManagement(configurer -> configurer.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
                 .authorizeHttpRequests(authorize ->
-                        authorize.requestMatchers("/", "/auth/**", "/webjars/**", "/js/**", "/image/**").permitAll() // 로그인 회원가입 예외
+                        authorize.regexMatchers("/", "/auth/.*", "/webjars/.*", "/js/.*", "/image/.*").permitAll() // 로그인 회원가입 예외
                 // 나머저 모든 요청은 인증을 해야한다.
 //              .anyRequest().hasRole(String.valueOf(RoleType.USER)
-                                .requestMatchers("**exception**").permitAll()
-                                .requestMatchers("/board/**", "/member/profile").hasRole("USER"))
+                                .regexMatchers(".*exception.*").permitAll()
+                                .regexMatchers("/board/.*", "/member/profile").hasRole("USER"))
                         // 게시글 권한은 user에게만.(.hasRole("USER"))
                         // 관리권한은 admin에게만.
                 .addFilterBefore(new JwtAuthenticationFilter(jwtTokenProvider),
@@ -74,7 +74,7 @@ public class SecurityConfig {
 
     @Bean
     public WebSecurityCustomizer webSecurityCustomizer() {
-        return (web) -> web.ignoring().requestMatchers( "/api-docs/**","/v2/api-docs/**", "/v3/api-docs/**", "/swagger-resources/**"
-                ,"/swagger-ui**", "/swagger-ui/**", "/webjars/**", "/swagger/**", "/sign-api/exception", "/member/join", "/member/login", "/member/refresh"); //"/error",
+        return (web) -> web.ignoring().regexMatchers( "/api-docs/.*","/v2/api-docs/.*", "/v3/api-docs/.*", "/swagger-resources/.*"
+                ,"/swagger-ui.*", "/swagger-ui/.*", "/webjars/.*", "/swagger/.*", "/sign-api/exception", "/member/join", "/member/login", "/member/refresh"); //"/error",
     }
 }
