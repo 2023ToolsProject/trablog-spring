@@ -11,7 +11,7 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     @Query("select b from Board b where b.member =:member")
     public List<Board> selectByUsername(Member member);
 
-    @Query("select b from Board b where b.member =:name and b.id =:id")
+    @Query("select b from Board b where b.member =:member and b.id =:id")
     public Board findByUsername(Member member, Long id);
 
     @Query("delete from Board b where b.member =:member and b.id =:id")
