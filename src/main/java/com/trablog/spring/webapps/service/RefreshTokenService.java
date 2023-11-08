@@ -17,10 +17,10 @@ import java.util.Optional;
 @RequiredArgsConstructor
 public class RefreshTokenService {
 
-    private MemberRepository memberRepository;
+    private final MemberRepository memberRepository;
 
-    private MemberService memberService;
-    private JwtTokenProvider jwtTokenProvider;
+    private final MemberService memberService;
+    private final JwtTokenProvider jwtTokenProvider;
 
     public boolean CheckToken(String username, String refreshToken) {
         // username으로 refreshtoken 필드 조회해서 tokenDTO의 refreshtoken 필드와 일치하는지 확인
