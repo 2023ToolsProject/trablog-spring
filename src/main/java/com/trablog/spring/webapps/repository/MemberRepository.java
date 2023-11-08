@@ -18,5 +18,9 @@ public interface MemberRepository extends JpaRepository<Member, String> {
     Optional<Member> existsByUsername(String username);
 
 
+    @Query("select m from Member m where m.refreshToken = :refreshToken")
+    Optional<Member> getMemberByRefreshToken(String refreshToken);
+    // get member by refreshtoken
+
 
 }

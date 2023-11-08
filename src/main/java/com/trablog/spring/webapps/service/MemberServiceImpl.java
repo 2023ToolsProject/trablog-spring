@@ -118,6 +118,9 @@ public class MemberServiceImpl implements MemberService {
             return updatedMember;
         }
 
-
+    @Override
+    public Optional<Member> getMemberByRefreshToken(String refreshToken) {
+        return memberRepository.getMemberByRefreshToken(refreshToken);
     }
+}
 

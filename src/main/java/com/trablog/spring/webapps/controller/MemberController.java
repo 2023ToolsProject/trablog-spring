@@ -18,6 +18,8 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Optional;
+
 @RestController
 @RequestMapping("/member")
 @Log4j2
@@ -68,8 +70,12 @@ public class MemberController {
     public ResponseEntity<Token> refreshPOST(@RequestBody RefreshTokenDTO refreshTokenDTO) throws MemberService.UsernameNotFoundException {
         log.info("refresh post...");
         log.info(refreshTokenDTO);
-        String username = refreshTokenDTO.getUsername();
         String refreshToken = refreshTokenDTO.getRefreshToken();
+        Optional<Member> member = memberService.getMemberByRefreshToken(refreshToken);
+        if(member.isEmpty()){
+            return new  ResponseEntity<>(HttpStatus.UNAUTHORIZED);
+        }
+        String username = member.get().getUsername();
         if(refreshTokenService.CheckToken(username, refreshToken)) {
             if(!refreshTokenService.CheckTokenValidTime(username)){
                 return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);  //리프레시 토큰 만료된 경우

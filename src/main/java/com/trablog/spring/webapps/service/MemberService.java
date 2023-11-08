@@ -5,7 +5,11 @@ import com.trablog.spring.webapps.security.Token;
 import com.trablog.spring.webapps.security.dto.MemberJoinDTO;
 import com.trablog.spring.webapps.security.dto.MemberLoginDTO;
 
+import java.util.Optional;
+
 public interface MemberService {
+
+    Optional<Member> getMemberByRefreshToken(String refreshToken);
 
     static class UsernameExistException extends Exception {
 
