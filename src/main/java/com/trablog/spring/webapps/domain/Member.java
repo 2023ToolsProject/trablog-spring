@@ -46,6 +46,9 @@ public class Member extends BaseTimeEntity implements UserDetails {
 
     private Date tokenIssueDate;
 
+    @Column(nullable = true)
+    private int login_type;
+
     public void changePassword(String password){
         this.password = password;
     }
