@@ -4,6 +4,7 @@ import com.trablog.spring.webapps.domain.Member;
 import com.trablog.spring.webapps.security.Token;
 import com.trablog.spring.webapps.security.dto.MemberJoinDTO;
 import com.trablog.spring.webapps.security.dto.MemberLoginDTO;
+import com.trablog.spring.webapps.security.dto.MemberSecurityDTO;
 import com.trablog.spring.webapps.security.dto.RefreshTokenDTO;
 import com.trablog.spring.webapps.service.MemberService;
 import com.trablog.spring.webapps.service.MemberServiceImpl;
@@ -32,7 +33,13 @@ public class MemberController {
     @GetMapping("/profile")
     public ResponseEntity<Member> getMember() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = Member.builder()
+                .email(memberSecurityDTO.getEmail())
+                .password(memberSecurityDTO.getPassword())
+                .username(memberSecurityDTO.getUsername())
+                .build();
+
 
         return ResponseEntity.status(HttpStatus.OK).body(member);
     }
