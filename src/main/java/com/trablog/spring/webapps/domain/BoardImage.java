@@ -1,21 +1,22 @@
 package com.trablog.spring.webapps.domain;
 
 import javax.persistence.*;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
+
+import lombok.*;
 
 
 @Entity
 @NoArgsConstructor
 @Getter
+@Setter
+@AllArgsConstructor
 public class BoardImage extends BaseTimeEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "image_id")
     private Long id;
 
-    @ManyToOne
+    @ManyToOne(cascade = CascadeType.MERGE, targetEntity = Board.class)
     @JoinColumn(name = "BOARD_ID")
     private Board board;
 
@@ -38,9 +39,9 @@ public class BoardImage extends BaseTimeEntity {
         this.board = board;
 
         //게시글에 현재 파일이 존재하지 않는다면
-        if(!board.getBoardImage().contains(this))
-            // 파일 추가
-            board.getBoardImage().add(this);
+//        if(!board.getBoardImage().contains(this))
+//            // 파일 추가
+//            board.getBoardImage().add(this);
     }
 
 }

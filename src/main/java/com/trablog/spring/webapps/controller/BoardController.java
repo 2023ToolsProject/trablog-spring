@@ -1,10 +1,14 @@
 package com.trablog.spring.webapps.controller;
 
-import com.trablog.spring.webapps.domain.Board;
-import com.trablog.spring.webapps.domain.Member;
+import com.trablog.spring.webapps.domain.*;
+import com.trablog.spring.webapps.dto.BoardReturnDto;
 import com.trablog.spring.webapps.dto.CreateBoardDto;
+import com.trablog.spring.webapps.repository.BoardImageRepository;
+import com.trablog.spring.webapps.repository.BoardRepository;
+import com.trablog.spring.webapps.repository.MemberRepository;
 import com.trablog.spring.webapps.security.JwtAuthenticationFilter;
 import com.trablog.spring.webapps.security.JwtTokenProvider;
+import com.trablog.spring.webapps.security.dto.MemberSecurityDTO;
 import com.trablog.spring.webapps.service.BoardService;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.log4j.Log4j2;
@@ -20,10 +24,12 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
+import org.springframework.util.CollectionUtils;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 @RestController
@@ -32,7 +38,10 @@ import java.util.List;
 @RequiredArgsConstructor
 public class BoardController {
     private final BoardService boardService;
+    private final MemberRepository memberRepository;
+    private final BoardImageRepository boardImageRepository;
     private final JwtTokenProvider jwtTokenProvider;
+    private final FileHandler fileHandler;
 
 
     @GetMapping
@@ -48,61 +57,195 @@ public class BoardController {
     }
 
 
+    /* Todo : 사진도 같이 리턴해야 함.*/
     // 사용자가 작성한 모든 리스트 조회
     @GetMapping("/list")
-    public ResponseEntity<?> getMemories() {
+    public List<BoardReturnDto> getMemories() {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
         List<Board> memories = boardService.findAll(member);
-        return new ResponseEntity<>(memories, HttpStatus.OK);
+        List<BoardReturnDto> boardReturnDtos = new ArrayList<>();
+        for(Board board : memories) {
+            List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+            for(BoardImage boardImage : board.getBoardImages()) {
+                BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+                bIreturnDtos.add(boardImageReturnDto);
+            }
+            BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .boardImages(bIreturnDtos) // 게시글 작성 메소드에서는 이미지도 같이 잘 리턴되는데 여기서는 왜 안되는지 모르겠음.
+                    .latitude(board.getLatitude())
+                    .longitude(board.getLongitude())
+                    .address(board.getAddress())
+                    .build();
+            boardReturnDtos.add(boardReturnDto);
+            }
+        return boardReturnDtos;
     }
 
+
+    /* Todo : 수정 */
     // 사용자가 작성한 게시글 단건 조회
     @GetMapping("/{id}")
     public ResponseEntity<?> getMemoryById(@PathVariable("id") Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
         Board board = boardService.findBoardById(member, id);
-        return new ResponseEntity<>(board, HttpStatus.OK);
+        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+        for(BoardImage boardImage : board.getBoardImages()) {
+            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+            bIreturnDtos.add(boardImageReturnDto);
+        }
+        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+                .id(board.getId())
+                .title(board.getTitle())
+                .content(board.getContent())
+                .boardImages(bIreturnDtos) // 게시글 작성 메소드에서는 이미지도 같이 잘 리턴되는데 여기서는 왜 안되는지 모르겠음.
+                .latitude(board.getLatitude())
+                .longitude(board.getLongitude())
+                .address(board.getAddress())
+                .build();
+        return new ResponseEntity<>(boardReturnDto, HttpStatus.OK);
     }
 
     // 게시글 업로드 API
-    /// 사진 업로드
-
-    @PostMapping
+    @PostMapping(value= "", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE) // MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}
     @ResponseStatus(HttpStatus.CREATED)
-    public Board postMemory(
-            @RequestPart(value="image", required=false) List<MultipartFile> files,
-            @RequestPart(value = "requestDto") CreateBoardDto createBoardDto
+    public ResponseEntity<?> postMemory(
+            @RequestPart() CreateBoardDto createBoardDto,
+            @RequestPart(value="image", required=false) List<MultipartFile> files
     ) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
-        String username = member.getUsername();
-        return boardService.save(username, createBoardDto, files);
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        String username = memberSecurityDTO.getUsername();
+        Board board = boardService.save(username, createBoardDto, files);
+
+        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+        for(BoardImage boardImage : board.getBoardImages()) {
+            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+            bIreturnDtos.add(boardImageReturnDto);
+        }
+//        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+//                .id(board.getId())
+//                .title(board.getTitle())
+//                .content(board.getContent())
+//                .boardImages(bIreturnDtos)
+//                .latitude(board.getLatitude())
+//                .longitude(board.getLongitude())
+//                .address(board.getAddress())
+//                .build();`
+        return getMemoryById(board.getId());
     }
 
-//     게시글 수정
-    @PutMapping("/{id}")
+    // 게시글 수정
+    @PutMapping(value="/{id}", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE )// MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}
     @ResponseStatus(HttpStatus.OK)
-    public Board putMemory(
-            @RequestPart(value="id") Long id,
-            @RequestPart(value="image", required=false) List<MultipartFile> files,
-            @RequestPart(value = "requestDto") CreateBoardDto createBoardDto
-    ) throws Exception {
+    public BoardReturnDto updateContent(@PathVariable("id") Long id,
+                                        @RequestPart(value = "requestDto") CreateBoardDto createBoardDto) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
-        String username = member.getUsername();
-        Board persistMemory = boardService.findBoardById(member, id);
-        persistMemory.update(createBoardDto.create());
-        Board savedMemory = boardService.save(username, createBoardDto, files);
-        return savedMemory;
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
+        Board board = boardService.findBoardById(member, id);
+        boardService.updateContent(member, id, createBoardDto);
+        Board updatedBoard = boardService.findBoardById(member, id);
+        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+        for(BoardImage boardImage : updatedBoard.getBoardImages()) {
+            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+            bIreturnDtos.add(boardImageReturnDto);
+        }
+        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+                .id(updatedBoard.getId())
+                .title(updatedBoard.getTitle())
+                .content(updatedBoard.getContent())
+                .boardImages(bIreturnDtos)
+                .latitude(updatedBoard.getLatitude())
+                .longitude(updatedBoard.getLongitude())
+                .address(updatedBoard.getAddress())
+                .build();
+        return boardReturnDto;
     }
 
-//     게시글 삭제
+//    // 사진 삭제
+//    @DeleteMapping(value="/{id}/images/{imageId}", produces = MediaType.APPLICATION_JSON_VALUE )// MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}
+//    @ResponseStatus(HttpStatus.OK)
+//    public BoardReturnDto deleteBoardImage(
+//            @PathVariable("id") Long id,
+//            @PathVariable("imageId") Long imageId
+//    ) throws Exception {
+//
+//        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+//        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+//        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
+////        Board board = boardService.findBoardById(member, id);
+//        boardService.deleteBoardImage(member, imageId);
+//        Board updatedBoard = boardService.findBoardById(member, id);
+//        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+//        for(BoardImage boardImage : updatedBoard.getBoardImages()) {
+//            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+//            bIreturnDtos.add(boardImageReturnDto);
+//        }
+//        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+//                .id(updatedBoard.getId())
+//                .title(updatedBoard.getTitle())
+//                .content(updatedBoard.getContent())
+//                .boardImages(bIreturnDtos)
+//                .latitude(updatedBoard.getLatitude())
+//                .longitude(updatedBoard.getLongitude())
+//                .address(updatedBoard.getAddress())
+//                .build();
+//        return boardReturnDto;
+//    }
+
+    // 사진 추가
+    @PostMapping(value="/{id}/images", produces = MediaType.APPLICATION_JSON_VALUE, consumes = MediaType.MULTIPART_FORM_DATA_VALUE )// MediaType.APPLICATION_JSON_VALUE, MediaType.MULTIPART_FORM_DATA_VALUE}
+    @ResponseStatus(HttpStatus.OK)
+    public BoardReturnDto addBoardImage(
+            @PathVariable("id") Long id,
+            @RequestPart(value="image", required=false) List<MultipartFile> files
+    ) throws Exception {
+
+        Authentication auth = SecurityContextHolder.getContext().getAuthentication();
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
+        Board board = boardService.findBoardById(member, id);
+
+        if(!CollectionUtils.isEmpty(files)) { // 전달되어 온 파일이 하나라도 존재
+            List<BoardImage> boardImages = fileHandler.parseFileInfo(board, files);
+            for(BoardImage boardImage : boardImages)
+                board.addBoardImage(boardImageRepository.save(boardImage));
+        } else { // 전달되어 온 파일 아예 x
+            throw new RuntimeException();
+        }
+
+        Board updatedBoard = boardService.findBoardById(member, id);
+        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+        for(BoardImage boardImage : updatedBoard.getBoardImages()) {
+            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+            bIreturnDtos.add(boardImageReturnDto);
+        }
+        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+                .id(updatedBoard.getId())
+                .title(updatedBoard.getTitle())
+                .content(updatedBoard.getContent())
+                .boardImages(bIreturnDtos)
+                .latitude(updatedBoard.getLatitude())
+                .longitude(updatedBoard.getLongitude())
+                .address(updatedBoard.getAddress())
+                .build();
+        return boardReturnDto;
+    }
+
+
+
     @DeleteMapping("/{id}")
     public ResponseEntity<?> deleteMemory(@PathVariable("id") Long id) {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
-        Member member = (Member) auth.getPrincipal();
+        MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
+        Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
         boardService.deleteById(member, id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

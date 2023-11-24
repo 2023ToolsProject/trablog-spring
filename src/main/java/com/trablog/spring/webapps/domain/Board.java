@@ -3,6 +3,7 @@ package com.trablog.spring.webapps.domain;
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import javax.persistence.*;
 import lombok.*;
+import lombok.extern.log4j.Log4j2;
 
 
 import java.io.Serializable;
@@ -16,6 +17,7 @@ import java.util.List;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
+@Log4j2
 public class Board extends BaseTimeEntity implements Serializable { // serializable: 객체를 파일로
     //저장하거나 네트워크를 통해 전송하고, 나중에 역직렬화 하여 객체를 다시 복원할 수 있음
 
@@ -35,11 +37,13 @@ public class Board extends BaseTimeEntity implements Serializable { // serializa
     @JsonBackReference // 순환참조 무한루프 방지
     private Member member;
 
+
     @OneToMany(mappedBy = "board",
-            cascade = {CascadeType.PERSIST, CascadeType.REMOVE},
+            cascade = {CascadeType.PERSIST},
             orphanRemoval = true
     )
-    private List<BoardImage> boardImage = new ArrayList<>();
+    @JsonBackReference // 순환참조 무한루프 방지
+    private List<BoardImage> boardImages = new ArrayList();
 
     private double latitude;
 
@@ -47,24 +51,32 @@ public class Board extends BaseTimeEntity implements Serializable { // serializa
 
     private String address;
 
-    public void update(Board board) {
+
+    public void update(String title, String content, double latitude, double longitude, String address) {
         this.title = title;
         this.content = content;
-        this.boardImage = boardImage;
         this.latitude = latitude;
         this.longitude = longitude;
         this.address = address;
     }
 
     public void addBoardImage(BoardImage boardImage) {
-        this.boardImage.add(boardImage);
-
+//        this.boardImages.add(boardImage);
+        if(this.boardImages == null) {
+            List<BoardImage> boardImages = new ArrayList<>();
+            boardImages.add(boardImage);
+            this.setBoardImages(boardImages);
+        } else {
+            this.boardImages.add(boardImage);
+        }
+/*
         // 게시글에 파일이 저장되어있지 않은 경우
         if(boardImage.getBoard() != this) {
             // 파일 저장
             boardImage.setBoard(this);
         }
 
+ */
     }
 }
 

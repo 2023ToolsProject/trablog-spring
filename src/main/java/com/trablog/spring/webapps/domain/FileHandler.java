@@ -15,7 +15,7 @@ import java.util.List;
 @Component
 
 public class FileHandler {
-    public List<BoardImage> parseFileInfo(
+    public List<BoardImage> parseFileInfo(Board board,
             List<MultipartFile> multipartFiles
     )throws Exception {
         // 반환할 파일 리스트
@@ -82,6 +82,7 @@ public class FileHandler {
                         boardImageDto.getFilePath(),
                         boardImageDto.getFileSize()
                 );
+                boardImage.setBoard(board);
 
                 // 생성 후 리스트에 추가
                 fileList.add(boardImage);
