@@ -246,7 +246,7 @@ public class BoardController {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
         Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
-        boardService.deleteById(member, id);
+        boardService.deleteById(id);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 }

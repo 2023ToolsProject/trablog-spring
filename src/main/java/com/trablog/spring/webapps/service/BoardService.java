@@ -73,34 +73,35 @@ public class BoardService {
     //사진 추가
 
     // 사진 삭제
-    @Transactional
-    public void update(Member member, Long id, CreateBoardDto createBoardDto, List<MultipartFile> addFileList) throws Exception {
-        Board board = findBoardById(member, id);
-        List<BoardImage> boardImages = fileHandler.parseFileInfo(board, addFileList);
-        if(!boardImages.isEmpty()) {
-            for(BoardImage boardImage : boardImages) {
-                board.addBoardImage(boardImageRepository.save(boardImage));
-            }
-        }
-        board.update(createBoardDto.getTitle(), createBoardDto.getContent(), createBoardDto.getLatitude(), createBoardDto.getLongitude(), createBoardDto.getAddress());
-        boardRepository.save(board);
-    }
+//    @Transactional
+//    public void update(Member member, Long id, CreateBoardDto createBoardDto, List<MultipartFile> addFileList) throws Exception {
+//        Board board = findBoardById(member, id);
+//        List<BoardImage> boardImages = fileHandler.parseFileInfo(board, addFileList);
+//        if(!boardImages.isEmpty()) {
+//            for(BoardImage boardImage : boardImages) {
+//                board.addBoardImage(boardImageRepository.save(boardImage));
+//            }
+//        }
+//        board.update(createBoardDto.getTitle(), createBoardDto.getContent(), createBoardDto.getLatitude(), createBoardDto.getLongitude(), createBoardDto.getAddress());
+//        boardRepository.save(board);
+//    }
+//
 
 
 
-
-
-    @Transactional
-    public void deleteById(Member member, Long id) {
-        boardRepository.deleteByUsername(member, id);
-    }
-
-    public void deleteImage(Member member, Long imageId) {
-        boardRepository.deleteBoardImages(member, imageId);
-    }
 
     @Transactional
-    public void deleteBoardImage(Member member, Long imageId) {
-        boardRepository.deleteBoardImages(member, imageId);
+    public void deleteById(Long id) {
+        boardRepository.deleteBoardImages(id);
+        boardRepository.deleteById(id);
     }
+
+//    public void deleteImage(Member member, Long imageId) {
+//        boardRepository.deleteBoardImages(member, imageId);
+//    }
+
+//    @Transactional
+//    public void deleteBoardImage(Member member, Long imageId) {
+//        boardRepository.deleteBoardImages(member, imageId);
+//    }
 }

@@ -25,8 +25,8 @@ public interface BoardRepository extends JpaRepository<Board, Long> {
     public void deleteByUsername(Member member, Long id);
 
     @Modifying
-    @Query("delete from BoardImage bi where bi.board.member =:member and bi.id = :imageId")
-    public void deleteBoardImages(Member member, Long imageId);
+    @Query("delete from BoardImage bi where bi.board.id = :id")
+    public void deleteBoardImages(Long id);
 
     @Query("select b from Board b where b.title LIKE %:keyword% OR b.content LIKE %:keyword%")
     public List<Board> searchAll(String keyword);
