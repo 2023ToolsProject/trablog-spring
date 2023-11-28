@@ -3,6 +3,7 @@ package com.trablog.spring.webapps.controller;
 import com.trablog.spring.webapps.domain.*;
 import com.trablog.spring.webapps.dto.BoardReturnDto;
 import com.trablog.spring.webapps.dto.CreateBoardDto;
+import com.trablog.spring.webapps.dto.NoImageBoardReturnDto;
 import com.trablog.spring.webapps.repository.BoardImageRepository;
 import com.trablog.spring.webapps.repository.BoardRepository;
 import com.trablog.spring.webapps.repository.MemberRepository;
@@ -76,7 +77,7 @@ public class BoardController {
                     .id(board.getId())
                     .title(board.getTitle())
                     .content(board.getContent())
-                    .boardImages(bIreturnDtos) // 게시글 작성 메소드에서는 이미지도 같이 잘 리턴되는데 여기서는 왜 안되는지 모르겠음.
+                    .boardImages(bIreturnDtos)
                     .latitude(board.getLatitude())
                     .longitude(board.getLongitude())
                     .address(board.getAddress())
@@ -95,21 +96,34 @@ public class BoardController {
         MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
         Member member = memberRepository.getWithRoles(memberSecurityDTO.getUsername()).get();
         Board board = boardService.findBoardById(member, id);
-        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
-        for(BoardImage boardImage : board.getBoardImages()) {
-            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
-            bIreturnDtos.add(boardImageReturnDto);
+        if(board.getBoardImages() != null) {
+            List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
+            for (BoardImage boardImage : board.getBoardImages()) {
+                BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
+                bIreturnDtos.add(boardImageReturnDto);
+            }
+            BoardReturnDto boardReturnDto = BoardReturnDto.builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .boardImages(bIreturnDtos)
+                    .latitude(board.getLatitude())
+                    .longitude(board.getLongitude())
+                    .address(board.getAddress())
+                    .build();
+            return new ResponseEntity<>(boardReturnDto, HttpStatus.OK);
+        } else {
+            NoImageBoardReturnDto noImageBoardReturnDto = NoImageBoardReturnDto.builder()
+                    .id(board.getId())
+                    .title(board.getTitle())
+                    .content(board.getContent())
+                    .latitude(board.getLatitude())
+                    .longitude(board.getLongitude())
+                    .address(board.getAddress())
+                    .build();
+            return new ResponseEntity<>(noImageBoardReturnDto, HttpStatus.OK);
         }
-        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
-                .id(board.getId())
-                .title(board.getTitle())
-                .content(board.getContent())
-                .boardImages(bIreturnDtos) // 게시글 작성 메소드에서는 이미지도 같이 잘 리턴되는데 여기서는 왜 안되는지 모르겠음.
-                .latitude(board.getLatitude())
-                .longitude(board.getLongitude())
-                .address(board.getAddress())
-                .build();
-        return new ResponseEntity<>(boardReturnDto, HttpStatus.OK);
+
     }
 
     // 게시글 업로드 API
@@ -117,27 +131,13 @@ public class BoardController {
     @ResponseStatus(HttpStatus.CREATED)
     public ResponseEntity<?> postMemory(
             @RequestPart() CreateBoardDto createBoardDto,
-            @RequestPart(value="image", required=false) List<MultipartFile> files
+            @RequestPart(value="image", required=false) List<MultipartFile> files // required=false가 사진 안올려도 된다는 거 아닌가? 아니면 그냥 헤더에 추가 안해도 된다는 건가?
     ) throws Exception {
         Authentication auth = SecurityContextHolder.getContext().getAuthentication();
         MemberSecurityDTO memberSecurityDTO = ((MemberSecurityDTO) auth.getPrincipal());
         String username = memberSecurityDTO.getUsername();
         Board board = boardService.save(username, createBoardDto, files);
 
-        List<BoardImageReturnDto> bIreturnDtos = new ArrayList<>();
-        for(BoardImage boardImage : board.getBoardImages()) {
-            BoardImageReturnDto boardImageReturnDto = new BoardImageReturnDto(boardImage.getId(), boardImage.getImageName(), boardImage.getImagePath(), boardImage.getImageSize());
-            bIreturnDtos.add(boardImageReturnDto);
-        }
-//        BoardReturnDto boardReturnDto = BoardReturnDto.builder()
-//                .id(board.getId())
-//                .title(board.getTitle())
-//                .content(board.getContent())
-//                .boardImages(bIreturnDtos)
-//                .latitude(board.getLatitude())
-//                .longitude(board.getLongitude())
-//                .address(board.getAddress())
-//                .build();`
         return getMemoryById(board.getId());
     }
 
