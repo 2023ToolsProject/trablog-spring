@@ -17,11 +17,11 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 
 
 ## Tech Stack
-**Framework** - <img src="https://img.shields.io/badge/Spring Boot-6DB33F?style=for-the-social&logo=Spring Boot&logoColor=white">  <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-social&logo=Gradle&logoColor=white">
+**Framework** - <img src="https://img.shields.io/badge/SpringBoot-6DB33F?style=for-the-social&logo=SpringBoot&logoColor=white">  <img src="https://img.shields.io/badge/Gradle-02303A?style=for-the-social&logo=Gradle&logoColor=white">
 
 **ORM** - <img src="https://img.shields.io/badge/Spring Data JPA-6DB33F?style=for-the-social&logo=Databricks&logoColor=white">
 
-**Authorization** - <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-social&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-social&logo=JSON Web Tokens&logoColor=white">
+**Authorization** - <img src="https://img.shields.io/badge/Spring Security-6DB33F?style=for-the-social&logo=springsecurity&logoColor=white">  <img src="https://img.shields.io/badge/JWT-000000?style=for-the-social&logo=JSON%20Web%20Tokens&logoColor=white">
 
 **Database** - <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-social&logo=MariaDB&logoColor=white"> 
 
