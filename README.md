@@ -12,7 +12,7 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 
 ## Developers
 **Designer** : <a href="https://github.com/Iamsumin">정수민</a> <br>
-**Front_end** : <a href="https://github.com/leaf1191">심종우</a> <br>
+**Front-end** : <a href="https://github.com/leaf1191">심종우</a> <br>
 **Back-end** : <a href="https://github.com/minyeongg">박민영</a>
 
 
