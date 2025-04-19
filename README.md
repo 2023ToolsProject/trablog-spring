@@ -10,8 +10,10 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 - 회원가입/로그인
 - 소셜로그인
 
-## Backend Developer
-- <a href="https://github.com/minyeongg">박민영</a>
+## Developers
+**Designer** : <a href="https://github.com/Iamsumin">정수민</a>
+**Front_end** : <a href="https://github.com/leaf1191">심종우</a>
+**Back-end** : <a href="https://github.com/minyeongg">박민영</a>
 
 
 ## Tech Stack
