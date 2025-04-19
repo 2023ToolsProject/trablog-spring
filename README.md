@@ -1,5 +1,6 @@
 # TraBlog <a href="https://youtu.be/Guc-_rdGnFQ"> <img src="https://github.com/2023ToolsProject/trablog-spring/blob/main/images/8957ea318563acdc4a08ca50e611fdab.jpg" align="left" width="100"></a>
 ### MZ세대를 위한 여행 기록 및 도장깨기 어플
+https://www.youtube.com/watch?v=Guc-_rdGnFQ
 <br>
 
 ## 주요 기능
