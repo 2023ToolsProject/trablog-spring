@@ -25,7 +25,7 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 
 **Database** - <img src="https://img.shields.io/badge/MariaDB-003545?style=for-the-social&logo=MariaDB&logoColor=white"> 
 
-**Infra Structure** - <img src ="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-social&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/Nginx-009639?style=flat-square&logo=nginx&logoColor=white">
+**Infra Structure** - <img src ="https://img.shields.io/badge/AWS EC2-FF9900?style=for-the-social&logo=amazonec2&logoColor=white"> <img src="https://img.shields.io/badge/Nginx-009639?style=for-the-social&logo=nginx&logoColor=white">
 
 **Api Docs** - <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-social&logo=swagger&logoColor=white"> <img src="https://img.shields.io/badge/Spring REST Docs-6DB33F?style=for-the-social&logo=Spring&logoColor=white">
 
