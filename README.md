@@ -30,7 +30,7 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 **Api Docs** - <img src="https://img.shields.io/badge/Swagger-85EA2D?style=for-the-social&logo=swagger&logoColor=white"> <img src="https://img.shields.io/badge/Spring REST Docs-6DB33F?style=for-the-social&logo=Spring&logoColor=white">
 
 ## Database Schema
-<img src="https://github.com/2023ToolsProject/trablog-spring/blob/main/docs/erd.png" width="900" height="900">
+<img src="https://github.com/2023ToolsProject/trablog-spring/blob/main/docs/erd.png" width="450" height="900">
 
 ## DEV Server Architecture
 <img width="912" alt="image" src="https://github.com/2023ToolsProject/trablog-spring/blob/main/images/trablog_architecture.png">
