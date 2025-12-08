@@ -36,4 +36,4 @@ https://www.youtube.com/watch?v=Guc-_rdGnFQ
 <img src="https://github.com/2023ToolsProject/trablog-spring/blob/main/docs/erd.png" width="450" height="900">
 
 ## DEV Server Architecture
-<img width="912" alt="image" src="https://github.com/2023ToolsProject/trablog-spring/blob/main/images/trablog_architecture.png">
+<img width="912" alt="image" src="https://github.com/2023ToolsProject/trablog-spring/blob/main/images/TraBlog_Architecture.png">
